@@ -5,9 +5,8 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(runTests test_cases.cpp)
 target_link_libraries(
     runTests
-    GTest::GTest
-    GTest::main
+    GTest::gtest_main
     pthread
 )
 
-add_test(NAME AllTests RUN runTests)
+add_test(NAME AllTests COMMAND runTests)
