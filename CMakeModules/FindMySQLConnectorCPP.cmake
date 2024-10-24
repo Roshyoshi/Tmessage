@@ -1,0 +1,7 @@
+find_path(MYSQLCONNECTORCPP_INCLUDE_DIR NAMES mysql_connection.h PATHS /usr/include/mysqlcppconn)
+find_library(MYSQLCONNECTORCPP_LIBRARIES NAMES mysqlcppconn PATHS /usr/lib /usr/lib64)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(MySQLConnectorCPP DEFAULT_MSG MYSQLCONNECTORCPP_LIBRARIES MYSQLCONNECTORCPP_INCLUDE_DIR)
+
+mark_as_advanced(MYSQLCONNECTORCPP_INCLUDE_DIR MYSQLCONNECTORCPP_LIBRARIES)

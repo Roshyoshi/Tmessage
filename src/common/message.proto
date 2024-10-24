@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message TextMessage {
+    string sender = 1;
+    string receiver = 2;
+    string content = 3;
+    int64 timestamp = 4;
+}
