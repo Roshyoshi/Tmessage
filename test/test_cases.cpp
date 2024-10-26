@@ -7,7 +7,7 @@ TEST(ExampleTest, SampleTest){
 
 // Test the ThreadPool class
 TEST(ThreadPool, SingleTask){
-    ThreadPool pool(2);
+    ThreadPool pool(1);
     std::atomic<bool> taskExecuted(false);
 
     pool.Enqueue([&taskExecuted] {
@@ -15,12 +15,12 @@ TEST(ThreadPool, SingleTask){
     });
 
     while(1){
-        if(pool.isEmpty()){
+        if(pool.isIdle()){
             break;
         }
     }
 
-    EXPECT_TRUE(taskExecuted);
+    EXPECT_TRUE(static_cast<bool>(taskExecuted));
     }
 
 TEST(ThreadPool, MultipleTasks){
@@ -34,7 +34,7 @@ TEST(ThreadPool, MultipleTasks){
     }
 
     while(1){
-        if(pool.isEmpty()){
+        if(pool.isIdle()){
             break;
         }
     }

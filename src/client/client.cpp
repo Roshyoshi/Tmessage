@@ -2,7 +2,61 @@
 
 int main() {
     //TODO: implement client logic
+    int sockfd;
+    struct addrinfo hints, *servinfo, *p;
+
+    std::memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    std::cout << "Enter the server IP address: ";
+    std::string serverIP;
+    std::cin >> serverIP;
+
+    std::cout << "Enter the server port number: ";
+    std::string serverPort;
+    std::cin >> serverPort;
+
+    if (int status = getaddrinfo(serverIP.c_str(), serverPort.c_str(), &hints, &servinfo) != 0) {
+        std::cerr << "getaddrinfo: Invalid Server " << gai_strerror(status) << std::endl;
+        return 1;
+    }
+
+
+    // Loop through all the results and connect to the first we can
+    for (p = servinfo; p != NULL; p = p->ai_next) {
+
+        if (sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol) == -1) {
+            std::cerr << "client: socket failed" << std::endl;
+            continue;
+        }
+
+        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            std::cerr << "client: connect failed" << std::endl;
+            continue;
+        }
+
+        break;
+    }
+
+    if (p == NULL) {
+        std::cerr << "client: failed to connect" << std::endl;
+        return 2;
+    }
+
+    freeaddrinfo(servinfo);
+
+    //TODO: Implement client logic
+    //TODO: Client should send request structures to the server, and receive responses
+
+    // TODO: Send Request to server asking for the list of clients connected
+    struct Request request;
+    memset(&request, 0, sizeof(request));
+
+    request.instruction = "LIST";
     
+
+
     return 0;
 
 }

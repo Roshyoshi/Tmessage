@@ -14,7 +14,7 @@ class ThreadPool {
         ThreadPool(size_t numThreads);
         ~ThreadPool();
         void Enqueue(std::function<void()> func);
-        bool isEmpty();
+        bool isIdle();
         private:
             std::vector<std::thread> threads;
             std::queue<std::function<void()>> tasks;
@@ -22,4 +22,15 @@ class ThreadPool {
             std::condition_variable condition;
             bool stop;
 };
+struct Message {
+    char *message;
+    char *sender;
+    char *recipient;
+};
+
+struct Request {
+    char *instruction;
+    Message *message = NULL;
+};
+
 #endif

@@ -3,7 +3,7 @@
 
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -13,8 +13,14 @@
 #include <sys/wait.h>
 
 
+struct clients {
+    int clientSocket;
+    struct sockaddr_storage their_addr;
+    socklen_t sin_size;
+    char *name;
+};
 
+void handle_client(int clientSocket);
 
-
-#endif 
-
+char *get_request(int clientSocket);
+#endif

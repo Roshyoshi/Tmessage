@@ -9,6 +9,8 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
         threads.emplace_back([this] {
 
             while (true) {
+
+                // Create a task
                 std::function<void()> task;
 
                 {
@@ -27,7 +29,7 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
     }
 }
 
-
+// Add a task to the thread pool
 void ThreadPool::Enqueue(std::function<void()> func) {
     {
         std::unique_lock<std::mutex> lock(queueMutex);
@@ -36,12 +38,14 @@ void ThreadPool::Enqueue(std::function<void()> func) {
     condition.notify_one();
 }
 
-bool ThreadPool::isEmpty() {
+// Check if the thread pool is idle
+bool ThreadPool::isIdle() {
+    std::unique_lock<std::mutex> lock(queueMutex);
     return tasks.empty();
 }
 
 
-
+// Destructor
 ThreadPool::~ThreadPool() {
     {
         std::unique_lock<std::mutex> lock(queueMutex);
