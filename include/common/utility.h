@@ -8,6 +8,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <string>
 
 class ThreadPool {
     public:
@@ -22,15 +23,30 @@ class ThreadPool {
             std::condition_variable condition;
             bool stop;
 };
-struct Message {
-    char *message;
-    char *sender;
-    char *recipient;
+
+
+struct TextMessage {
+    std::string message;
+    std::string recipient;
 };
 
-struct Request {
-    char *instruction;
-    Message *message = NULL;
+struct ClientRequest {
+    std::string sender;
+    std::string instruction;
+    TextMessage *message = NULL;
 };
+
+struct ServerRequest {
+    std::string instruction;
+    std::string information;
+};
+
+
+std::string serializeClientRequest(ClientRequest *req);
+ClientRequest *deserializeClientRequest(std::string req);
+
+std::string serializeServerRequest(ServerRequest *req);
+ServerRequest *deserializeServerRequest(std::string req);
+
 
 #endif

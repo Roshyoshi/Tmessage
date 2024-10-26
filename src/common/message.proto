@@ -1,8 +1,12 @@
 syntax = "proto3";
 
 message TextMessage {
-    string sender = 1;
-    string receiver = 2;
-    string content = 3;
-    int64 timestamp = 4;
+    string message = 1;
+    string sender = 2;
+    string receiver = 3;
+}
+
+message Request {
+    string instruction = 1;
+    TextMessage message = 2;
 }

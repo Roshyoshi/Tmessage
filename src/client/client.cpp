@@ -46,18 +46,29 @@ int main() {
 
     freeaddrinfo(servinfo);
 
-    //TODO: Implement client logic
-    //TODO: Client should send request structures to the server, and receive responses
+    std::cout << "Connected to the server" << std::endl;
+    std::cout << "Enter your name: ";
+    std::string name;
+    std::cin >> name;
 
-    // TODO: Send Request to server asking for the list of clients connected
-    struct Request request;
-    memset(&request, 0, sizeof(request));
+    send(sockfd, name.c_str(), name.size(), 0);
 
-    request.instruction = "LIST";
-    
+    std::thread sendThread(sendMessage, sockfd, name);
+    std::thread receiveThread(receiveMessage, sockfd);
 
+    sendThread.join();
+    receiveThread.join();
 
     return 0;
+
+}
+
+
+void sendMessage(int sockfd, std::string name){
+
+}
+
+void receiveMessage(int sockfd){
 
 }
 
