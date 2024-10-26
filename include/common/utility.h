@@ -14,7 +14,7 @@ class ThreadPool {
         ThreadPool(size_t numThreads);
         ~ThreadPool();
         void Enqueue(std::function<void()> func);
-        bool ThreadPool::isEmpty();
+        bool isEmpty();
         private:
             std::vector<std::thread> threads;
             std::queue<std::function<void()>> tasks;
