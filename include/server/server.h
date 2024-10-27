@@ -1,6 +1,4 @@
-#ifndef SERVER_H
-#define SERVER_H
-
+#pragma once 
 
 #include <iostream>
 #include <cstring>
@@ -12,16 +10,8 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <unordered_map>
-
-
-struct clients {
-    int clientSocket;
-    struct sockaddr_storage their_addr;
-    socklen_t sin_size;
-    char *name;
-};
+#include "common/utility.h"
 
 void handle_client(int clientSocket);
 
-char *get_request(int clientSocket);
-#endif
+

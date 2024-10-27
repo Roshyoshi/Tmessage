@@ -1,7 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
-//TODO: declare function prototypes for client
 #include <iostream>
 #include <cstring>
 #include <sys/types.h>
@@ -13,4 +11,3 @@
 
 void sendMessage(int sockfd, std::string name);
 void receiveMessage(int sockfd);
-#endif
