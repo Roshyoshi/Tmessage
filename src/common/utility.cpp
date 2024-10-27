@@ -79,4 +79,25 @@ T *deserializeProto(std::string data) {
     return deserializedData;
 }
 
+//Wrapper function to handle recv system call
+std::string get_request(int clientSocket)
+{
+    char *buffer = new char[1024];
+    int bytesReceived = recv(clientSocket, buffer, 1024, 0);
+
+    if (bytesReceived == -1)
+    {
+        std::cerr << "Error in recv()" << std::endl;
+        return NULL;
+    }
+
+    if (bytesReceived == -1)
+    {
+        std::cerr << "Error in recv()" << std::endl;
+        return NULL;
+    }
+    std::string res = std::string(buffer);
+    return res;
+}
+
 
