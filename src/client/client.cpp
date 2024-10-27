@@ -1,7 +1,7 @@
 #include "client/client.h"
 
 int main() {
-    //TODO: implement client logic
+    // client logic
     int sockfd;
     struct addrinfo hints, *servinfo, *p;
 
@@ -46,6 +46,8 @@ int main() {
 
     freeaddrinfo(servinfo);
 
+
+    /// Connected to the server
     std::cout << "Connected to the server" << std::endl;
     std::cout << "Enter your name: ";
     std::string name;
@@ -65,11 +67,27 @@ int main() {
 
 
 void sendMessage(int sockfd, std::string name){
+    //First message is request for list of clients connected to server
+    ClientRequest *req = new ClientRequest();
+    req->sender = name;
+    req->instruction = "LIST";
+
+    std::string request = serializeProto(req);
+    delete req;
+    send(sockfd, request.c_str(), request.size(), 0);
+    
 
 }
 
 void receiveMessage(int sockfd){
+    while (send(sockfd, NULL, 0, 0) != -1)
+    {
+        std::string res = get_request(sockfd);
+        ServerResponse *response = deserializeProto<ServerResponse>(res);
+        std::cout << response->information << std::endl;
+        delete response;
 
+    }
 }
 
 

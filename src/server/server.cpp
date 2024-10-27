@@ -72,12 +72,10 @@ int main()
         }
 
         // Add the client to the list of clients after receiving the name
-        char *name = get_request(clientSocket);
-        std::string clientName(name);
-        
+        std::string clientName = get_request(clientSocket);
         std::lock_guard<std::mutex> lock(clientsMutex);
         clients[clientName] = clientSocket;
-
+    
 
         pool.Enqueue([clientSocket] {
             handle_client(clientSocket);
@@ -89,15 +87,19 @@ int main()
 
 void handle_client(int clientSocket)
 {
+
+    //Handle the client request
     while (send(clientSocket, NULL, 0, 0) != -1)
     {
-        ClientRequest *req = deserializeClientRequest(get_request(clientSocket));
+
+        std::string res = get_request(clientSocket);
+        ClientRequest *req = deserializeProto<ClientRequest>(res);
 
         const char *instruction = (req->instruction).c_str();
 
         if (strcmp(instruction, "LIST") == 0)
         {
-            //TODO: Return a list of clients connected in string format to the client
+            //Return a list of clients connected in string format to the client
             std::lock_guard<std::mutex> lock(clientsMutex);
             std::string clientList = "";
             for (auto it = clients.begin(); it != clients.end(); it++)
@@ -106,30 +108,20 @@ void handle_client(int clientSocket)
             }
 
 
+            ServerResponse *res = new ServerResponse();
+            res->instruction = "DISPLAY";
+            res->information= clientList;
+
+            //Serealize the response and send it to the client
+            std::string response = serializeProto(res);
+            send(clientSocket, response.c_str(), response.size(), 0);
+            delete res;
         }
         else if (strcmp(instruction, "SEND") == 0)
         {
             //TODO: Send a message to a client based on the name of the client in the request
         }
+
+        delete req;
     }
-}
-
-char *get_request(int clientSocket)
-{
-    char *buffer = new char[1024];
-    int bytesReceived = recv(clientSocket, buffer, 1024, 0);
-
-    if (bytesReceived == -1)
-    {
-        std::cerr << "Error in recv()" << std::endl;
-        return NULL;
-    }
-
-    if (bytesReceived == -1)
-    {
-        std::cerr << "Error in recv()" << std::endl;
-        return NULL;
-    }
-
-    return buffer;
 }
