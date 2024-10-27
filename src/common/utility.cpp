@@ -58,3 +58,25 @@ ThreadPool::~ThreadPool() {
         thread.join();
     }
 }
+
+// Serialize a protocol buffer message
+template <typename T>
+std::string serializeProto(T *data) {
+    std::string serializedData;
+    if (!data->SerializeToString(&serializedData)) {
+        std::cerr << "Failed to serialize data" << std::endl;
+    }
+    return serializedData;
+}
+
+template <typename T>
+T *deserializeProto(std::string data) {
+    T *deserializedData = new T();
+
+    if (!deserializedData->ParseFromString(data)) {
+        std::cerr << "Failed to deserialize data" << std::endl;
+    }
+    return deserializedData;
+}
+
+
