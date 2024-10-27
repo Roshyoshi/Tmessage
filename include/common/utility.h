@@ -1,6 +1,5 @@
-#ifndef UTILITY_H
-#define UTILITY_H
-//TODO prototype utility functions 
+#pragma once
+// TODO prototype utility functions
 
 #include <functional>
 #include <vector>
@@ -9,44 +8,51 @@
 #include <mutex>
 #include <condition_variable>
 #include <string>
+#include <sys/socket.h>
+#include <iostream>
 
-class ThreadPool {
-    public:
-        ThreadPool(size_t numThreads);
-        ~ThreadPool();
-        void Enqueue(std::function<void()> func);
-        bool isIdle();
-        private:
-            std::vector<std::thread> threads;
-            std::queue<std::function<void()>> tasks;
-            std::mutex queueMutex;
-            std::condition_variable condition;
-            bool stop;
+class ThreadPool
+//Class to create a thread pool, used in the server to handle multiple clients
+{
+public:
+    ThreadPool(size_t numThreads);
+    ~ThreadPool();
+    void Enqueue(std::function<void()> func);
+    bool isIdle();
+
+private:
+    std::vector<std::thread> threads;
+    std::queue<std::function<void()>> tasks;
+    std::mutex queueMutex;
+    std::condition_variable condition;
+    bool stop;
 };
 
-
-struct TextMessage {
+struct TextMessage
+{
     std::string message;
     std::string recipient;
 };
 
-struct ClientRequest {
+struct ClientRequest
+{
     std::string sender;
     std::string instruction;
-    TextMessage *message = NULL;
+    TextMessage *message = nullptr;
 };
 
-struct ServerRequest {
+struct ServerResponse
+{
     std::string instruction;
     std::string information;
 };
+template <typename T>
 
+std::string serializeProto(T *data);
 
-std::string serializeClientRequest(ClientRequest *req);
-ClientRequest *deserializeClientRequest(std::string req);
+template <typename T>
 
-std::string serializeServerRequest(ServerRequest *req);
-ServerRequest *deserializeServerRequest(std::string req);
+T *deserializeProto(std::string data);
 
+std::string get_request(int clientSocket);
 
-#endif
